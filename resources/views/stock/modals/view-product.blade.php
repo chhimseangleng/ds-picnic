@@ -30,8 +30,20 @@
 
 <script>
 function openViewProductModal(product) {
-    // Fill modal fields
-    document.getElementById('modalProductImage').src = product.image ? `{{ asset('storage') }}/${product.image}` : '';
+    // Fill modal fields - use the S3 URL from image_url
+    const imgEl = document.getElementById('modalProductImage');
+    if (product.image_url) {
+        imgEl.src = product.image_url;
+        imgEl.style.display = 'block';
+        imgEl.onerror = function() {
+            this.style.display = 'none';
+            this.parentElement.innerHTML = '<div class="w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">Image not available</div>';
+        };
+    } else {
+        imgEl.style.display = 'none';
+        imgEl.parentElement.innerHTML = '<div class="w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">No Image</div>';
+    }
+    
     document.getElementById('modalProductName').textContent = product.name || '-';
     document.getElementById('modalProductCategory').textContent = product.category?.name || product.categoryID || '-';
     document.getElementById('modalProductUnitPrice').textContent = parseFloat(product.unitPrice).toFixed(2);
@@ -60,3 +72,4 @@ function closeViewProductModal() {
     document.getElementById('viewProductModal').classList.add('hidden');
 }
 </script>
+
