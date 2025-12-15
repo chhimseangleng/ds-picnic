@@ -26,6 +26,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/stock', [StockController::class, 'index'])->name('stock');
     Route::post('/stock/add-category', [StockController::class, 'storeCategory'])->name('stock.add-category');
     Route::post('/stock/product-store', [StockController::class, 'storeProduct'])->name('stock.store.product');
+//newwwwww 
+    Route::get('/stock/product/{id}', [StockController::class, 'showProduct'])->name('stock.show.product');
+    Route::put('/stock/product/{id}', [StockController::class, 'updateProduct'])->name('stock.update.product');
+    Route::delete('/stock/product/{id}', [StockController::class, 'deleteProduct'])->name('stock.delete.product');
+    Route::get('/api/products', [StockController::class, 'getProductsApi'])->name('api.products');
+    /////
     Route::get('/cashflow', [CashflowController::class, 'index'])->name('cashflow');
     Route::get('/employees', [EmployeesController::class, 'index'])->name('employees');
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');

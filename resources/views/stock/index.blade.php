@@ -66,9 +66,10 @@
                         class="bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden flex flex-col p-4 text-center">
                         <!-- Image -->
                         <div class="flex justify-center">
-                            @if ($product->image)
-                                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                                    class="w-32 h-32 object-contain rounded-lg shadow-md bg-gray-100">
+                            @if ($product->image_url)
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
+                                    class="w-32 h-32 object-contain rounded-lg shadow-md bg-gray-100"
+                                    onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'w-32 h-32 bg-gray-200 rounded-lg flex items-center justify-center\'>Image Error</div>';">
                             @else
                                 <div class="w-32 h-32 bg-gray-200 rounded-lg flex items-center justify-center">
                                     No Image
