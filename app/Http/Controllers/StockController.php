@@ -14,12 +14,23 @@ class StockController extends Controller
      */
     public function index()
     {
-        $categories = ProductCategory::all();
+        // Get all active categories for the filter buttons (exclude deleted)
+        $categories = ProductCategory::where('deleted', '!=', true)
+            ->orderBy('name')
+            ->get();
 
-        // Load products and eager load category relation to avoid N+1
-        $products = Product::with('category')->orderBy('name')->get();
+        // Build the product query
+        $query = Product::with('category')->orderBy('name');
 
-        // Add S3 image URLs to each product
+        // Filter by category if parameter exists
+        if (request('category')) {
+            $query->where('categoryID', request('category'));
+        }
+
+        // Get filtered products (or all if no category)
+        $products = $query->get();
+
+        // Generate image URLs
         $products->transform(function ($product) {
             $product->image_url = $this->getImageUrl($product->image);
             return $product;
@@ -30,7 +41,7 @@ class StockController extends Controller
 
     /**
      * Get the full S3 URL for an image path.
-     * 
+     *
      * @param string|null $imagePath The stored image path (e.g., 'images/filename.jpg')
      * @return string|null The full S3 URL or null if no image
      */
@@ -49,6 +60,18 @@ class StockController extends Controller
     }
 
     /**
+     * Display the category management page.
+     */
+    public function manageCategories()
+    {
+        $categories = ProductCategory::where('deleted', '!=', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('stock.categories', compact('categories'));
+    }
+
+    /**
      * Store a new product category.
      */
     public function storeCategory(Request $request)
@@ -59,9 +82,24 @@ class StockController extends Controller
 
         ProductCategory::create([
             'name' => $request->input('name'),
+            'deleted' => false,
         ]);
 
-        return redirect()->route('stock')->with('success', 'Product category added successfully.');
+        return redirect()->route('stock.categories')->with('success', 'Product category added successfully.');
+    }
+
+    /**
+     * Soft delete a product category.
+     */
+    public function deleteCategory(string $id)
+    {
+        $category = ProductCategory::findOrFail($id);
+
+        $category->update([
+            'deleted' => true,
+        ]);
+
+        return redirect()->route('stock.categories')->with('success', 'Category deleted successfully.');
     }
 
     /**
@@ -70,13 +108,13 @@ class StockController extends Controller
     public function storeProduct(Request $request)
     {
         $request->validate([
-            'name'       => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'categoryID' => 'required',
-            'unitPrice'  => 'required|numeric',
-            'sellPrice'  => 'required|numeric',
-            'qty'        => 'required|integer',
-            'minStock'   => 'nullable|integer',
-            'image'      => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'unitPrice' => 'required|numeric',
+            'sellPrice' => 'required|numeric',
+            'qty' => 'required|integer',
+            'minStock' => 'nullable|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $imagePath = null;
@@ -86,13 +124,13 @@ class StockController extends Controller
         }
 
         Product::create([
-            'name'       => $request->name,
+            'name' => $request->name,
             'categoryID' => $request->categoryID,
-            'unitPrice'  => $request->unitPrice,
-            'sellPrice'  => $request->sellPrice,
-            'qty'        => $request->qty,
-            'minStock'   => $request->minStock ?? 0,
-            'image'      => $imagePath,
+            'unitPrice' => $request->unitPrice,
+            'sellPrice' => $request->sellPrice,
+            'qty' => $request->qty,
+            'minStock' => $request->minStock ?? 0,
+            'image' => $imagePath,
         ]);
 
         return redirect()->back()->with('success', 'Product added successfully!');
@@ -100,7 +138,7 @@ class StockController extends Controller
 
     /**
      * Show a single product with its S3 image URL.
-     * 
+     *
      * @param string $id The product ID
      * @return \Illuminate\Http\JsonResponse
      */
@@ -117,7 +155,7 @@ class StockController extends Controller
 
     /**
      * Update an existing product with optional S3 image replacement.
-     * 
+     *
      * @param Request $request
      * @param string $id The product ID
      * @return \Illuminate\Http\RedirectResponse
@@ -125,13 +163,13 @@ class StockController extends Controller
     public function updateProduct(Request $request, string $id)
     {
         $request->validate([
-            'name'       => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'categoryID' => 'required',
-            'unitPrice'  => 'required|numeric',
-            'sellPrice'  => 'required|numeric',
-            'qty'        => 'required|integer',
-            'minStock'   => 'nullable|integer',
-            'image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'unitPrice' => 'required|numeric',
+            'sellPrice' => 'required|numeric',
+            'qty' => 'required|integer',
+            'minStock' => 'nullable|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $product = Product::findOrFail($id);
@@ -147,12 +185,12 @@ class StockController extends Controller
         }
 
         // Update product fields
-        $product->name       = $request->name;
+        $product->name = $request->name;
         $product->categoryID = $request->categoryID;
-        $product->unitPrice  = $request->unitPrice;
-        $product->sellPrice  = $request->sellPrice;
-        $product->qty        = $request->qty;
-        $product->minStock   = $request->minStock ?? 0;
+        $product->unitPrice = $request->unitPrice;
+        $product->sellPrice = $request->sellPrice;
+        $product->qty = $request->qty;
+        $product->minStock = $request->minStock ?? 0;
         $product->save();
 
         return redirect()->back()->with('success', 'Product updated successfully!');
@@ -160,7 +198,7 @@ class StockController extends Controller
 
     /**
      * Delete a product and its associated S3 image.
-     * 
+     *
      * @param string $id The product ID
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -179,7 +217,7 @@ class StockController extends Controller
 
     /**
      * Upload an image file to S3.
-     * 
+     *
      * @param \Illuminate\Http\UploadedFile $file
      * @param string $folder The folder to store the image in
      * @return string|null The S3 path or null on failure
@@ -189,7 +227,7 @@ class StockController extends Controller
         try {
             // Generate a unique filename with original extension
             $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-            
+
             // Simple store approach - let S3 bucket policy handle visibility
             $path = Storage::disk('s3')->putFileAs($folder, $file, $filename);
 
@@ -197,7 +235,7 @@ class StockController extends Controller
                 \Log::info('S3 Upload Success: ' . $path);
                 return $path;
             }
-            
+
             \Log::error('S3 Upload Failed: Path returned empty');
             return null;
         } catch (\Exception $e) {
@@ -212,7 +250,7 @@ class StockController extends Controller
 
     /**
      * Delete an image from S3.
-     * 
+     *
      * @param string|null $imagePath The S3 path of the image
      * @return bool True if deleted successfully, false otherwise
      */
@@ -236,7 +274,7 @@ class StockController extends Controller
 
     /**
      * Get all products as JSON with S3 image URLs (for API use).
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getProductsApi()

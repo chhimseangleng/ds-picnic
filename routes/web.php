@@ -24,9 +24,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/sales', [SalesController::class, 'index'])->name('sales');
     Route::get('/stock', [StockController::class, 'index'])->name('stock');
+    Route::get('/stock/categories', [StockController::class, 'manageCategories'])->name('stock.categories');
     Route::post('/stock/add-category', [StockController::class, 'storeCategory'])->name('stock.add-category');
+    Route::delete('/stock/category/{id}', [StockController::class, 'deleteCategory'])->name('stock.delete-category');
     Route::post('/stock/product-store', [StockController::class, 'storeProduct'])->name('stock.store.product');
-//newwwwww 
+    //newwwwww 
     Route::get('/stock/product/{id}', [StockController::class, 'showProduct'])->name('stock.show.product');
     Route::put('/stock/product/{id}', [StockController::class, 'updateProduct'])->name('stock.update.product');
     Route::delete('/stock/product/{id}', [StockController::class, 'deleteProduct'])->name('stock.delete.product');
@@ -45,4 +47,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -12,6 +12,11 @@ class ProductCategory extends Model
 
     protected $fillable = [
         'name',
+        'deleted',
+    ];
+
+    protected $casts = [
+        'deleted' => 'boolean',
     ];
 
     /**
