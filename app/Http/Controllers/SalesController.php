@@ -8,6 +8,7 @@ use App\Models\Bundle;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\ProductCategory;
+use App\Models\TransactionHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,7 +29,7 @@ class SalesController extends Controller
         // Search by customer name or order ID
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('orderID', 'like', '%' . $searchTerm . '%');
                 // We'll also search customer names if needed
             });
@@ -48,7 +49,7 @@ class SalesController extends Controller
         $employees = Employee::get();
         $customers = Customer::get();
         $categories = ProductCategory::where('deleted', '!=', true)->orderBy('name')->get();
-        
+
         // Get products with images
         $products = Product::with('category')->orderBy('name')->get();
         $products->transform(function ($product) {
@@ -126,6 +127,14 @@ class SalesController extends Controller
             }
         }
 
+        // Record transaction history (Income)
+        TransactionHistory::create([
+            'amount' => (float) $request->total,
+            'type' => 'income',
+            'description' => 'Sale Order #' . $orderID,
+            'date' => now(),
+        ]);
+
 
         return redirect()->route('sale.invoice', $sale->_id);
     }
@@ -174,7 +183,7 @@ class SalesController extends Controller
     public function getCustomerContact(string $id)
     {
         $customer = Customer::find($id);
-        
+
         if (!$customer) {
             return response()->json(['error' => 'Customer not found'], 404);
         }
