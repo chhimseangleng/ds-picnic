@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Product_Addstock extends Model
 {
-    // Table name (if not following Laravel naming convention)
+    // MongoDB connection
+    protected $connection = 'mongodb';
+    
+    // Table/Collection name
     protected $table = 'product_addstocks';
 
     // Mass assignable attributes

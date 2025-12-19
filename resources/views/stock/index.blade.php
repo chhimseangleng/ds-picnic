@@ -41,17 +41,34 @@
                     </button>
                     @include('stock.add-product-modal')
 
-                    <!-- Create Bundle -->
-                    <button
-                        class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg shadow flex items-center">
-                        <!-- Icon: Collection -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 7v14a2 2 0 002 2h14a2 2 0 002-2V7m-6 0V3H9v4M3 7h18" />
-                        </svg>
-                        Create Bundle
-                    </button>
+                    <!-- Bundle Management Section - More Prominent -->
+                    <div class="flex gap-3 ml-4 pl-4 border-l-2 border-purple-300">
+                        <!-- View Bundles Button -->
+                        <a href="{{ route('bundles') }}" 
+                            class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg shadow-lg flex items-center font-bold text-base transform hover:scale-105 transition-all duration-200">
+                            <!-- Icon: Eye -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View Bundles
+                        </a>
+
+                        <!-- Create Bundle Button -->
+                        <a href="{{ route('bundles.create') }}" 
+                            class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg shadow-lg flex items-center font-bold text-base transform hover:scale-105 transition-all duration-200">
+                            <!-- Icon: Plus Collection -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create Bundle
+                        </a>
+                    </div>
 
                 </div>
             </div>
@@ -120,10 +137,11 @@
 
                         <!-- Buttons -->
                         <div class="mt-3 flex flex-col gap-2 grid grid-cols-7">
-                            <!-- Top Row: View + Add Stock -->
+                            <!-- Top Row: Edit + Delete -->
                             <div class="col-span-5">
                                 <button
-                                    class="flex-1 w-full py-2 bg-blue-200 text-blue-500 font-bold rounded-lg hover:bg-blue-300 flex items-center justify-center">
+                                    class="flex-1 w-full py-2 bg-blue-200 text-blue-500 font-bold rounded-lg hover:bg-blue-300 flex items-center justify-center"
+                                    onclick='openEditProductModal(@json($product))'>
                                     <!-- Icon: Pencil -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -135,7 +153,8 @@
                             </div>
                             <div class="col-span-2">
                                 <button
-                                    class="flex-1 w-full py-2 bg-red-300 text-red-600 rounded-lg font-bold hover:bg-red-400 flex items-center justify-center">
+                                    class="flex-1 w-full py-2 bg-red-300 text-red-600 rounded-lg font-bold hover:bg-red-400 flex items-center justify-center"
+                                    onclick='confirmDeleteProduct(@json($product))'>
                                     <!-- Icon: Trash -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -145,9 +164,9 @@
 
                                 </button>
                             </div>
-                            <!-- Bottom Row: Edit + Delete -->
+                            <!-- Bottom Row: Add Stock -->
                             <div class="col-span-7">
-                                <!-- Edit Button -->
+                                <!-- Add Stock Button -->
                                 <button
                                     class="flex-1 w-full py-2 bg-blue-500 font-bold text-white rounded hover:bg-blue-600 flex items-center justify-center"
                                     onclick='openAddStockModal(@json($product))'>
@@ -174,4 +193,7 @@
     </div>
 
     @include('stock.modals.view-product')
+    @include('stock.modals.add-stock')
+    @include('stock.modals.edit-product')
+    @include('stock.modals.delete-product')
 </x-app-layout>

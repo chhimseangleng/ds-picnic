@@ -23,6 +23,7 @@ class Employee extends Model
         'working',    // boolean
         'startWork',  // date
         'stopWork',   // date or null
+        'profile_image', // S3 path to profile image
     ];
 
     // Casts for proper data types
