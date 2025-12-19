@@ -291,4 +291,37 @@ class StockController extends Controller
             'products' => $products,
         ]);
     }
+
+    /**
+     * Add stock to a product.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function addStock(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required',
+            'quantity' => 'required|integer|min:1',
+            'notes' => 'nullable|string',
+        ]);
+
+        $product = Product::findOrFail($request->product_id);
+
+        // Create stock addition record
+        \App\Models\Product_Addstock::create([
+            'employeeID' => auth()->user()->id ?? null,
+            'productID' => $request->product_id,
+            'qty' => $request->quantity,
+            'purchasePrice' => $product->unitPrice,
+            'totalAmount' => $product->unitPrice * $request->quantity,
+            'date' => now(),
+        ]);
+
+        // Update product quantity
+        $product->qty = $product->qty + $request->quantity;
+        $product->save();
+
+        return redirect()->back()->with('success', 'Stock added successfully!');
+    }
 }

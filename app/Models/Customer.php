@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Customer extends Model
 {
-    // Table name (optional, if not default "customers")
+    // MongoDB connection
+    protected $connection = 'mongodb';
+    
+    // Collection name
     protected $table = 'customers';
 
     // Mass assignable fields
@@ -20,6 +23,6 @@ class Customer extends Model
      */
     public function productSales()
     {
-        return $this->hasMany(\App\Models\Product_Sales::class, 'customerID', 'id');
+        return $this->hasMany(\App\Models\Product_Sales::class, 'customerID', '_id');
     }
 }

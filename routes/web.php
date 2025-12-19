@@ -33,10 +33,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/stock/product/{id}', [StockController::class, 'updateProduct'])->name('stock.update.product');
     Route::delete('/stock/product/{id}', [StockController::class, 'deleteProduct'])->name('stock.delete.product');
     Route::get('/api/products', [StockController::class, 'getProductsApi'])->name('api.products');
+    Route::post('/stock/add-stock', [StockController::class, 'addStock'])->name('stock.addStock');
+    
+    // Bundle routes
+    Route::get('/stock/bundles', [\App\Http\Controllers\BundleController::class, 'index'])->name('bundles');
+    Route::get('/stock/bundles/create', [\App\Http\Controllers\BundleController::class, 'create'])->name('bundles.create');
+    Route::post('/stock/bundles', [\App\Http\Controllers\BundleController::class, 'store'])->name('bundles.store');
+    Route::get('/stock/bundles/{id}/edit', [\App\Http\Controllers\BundleController::class, 'edit'])->name('bundles.edit');
+    Route::put('/stock/bundles/{id}', [\App\Http\Controllers\BundleController::class, 'update'])->name('bundles.update');
+    Route::delete('/stock/bundles/{id}', [\App\Http\Controllers\BundleController::class, 'destroy'])->name('bundles.destroy');
     /////
     Route::get('/cashflow', [CashflowController::class, 'index'])->name('cashflow');
     Route::get('/employees', [EmployeesController::class, 'index'])->name('employees');
+    Route::get('/employees/{id}', [EmployeesController::class, 'show'])->name('employees.show');
+    Route::post('/employees', [EmployeesController::class, 'store'])->name('employees.store');
+    Route::put('/employees/{id}', [EmployeesController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{id}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
+    
+    // Customer routes
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');
+    Route::post('/customers', [CustomersController::class, 'store'])->name('customers.store');
+    Route::put('/customers/{id}', [CustomersController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
+    
+    // Sale routes
+    Route::get('/sale', [\App\Http\Controllers\SalesController::class, 'index'])->name('sale');
+    Route::get('/sale/create', [\App\Http\Controllers\SalesController::class, 'create'])->name('sale.create');
+    Route::post('/sale', [\App\Http\Controllers\SalesController::class, 'store'])->name('sale.store');
+    Route::get('/sale/{id}/invoice', [\App\Http\Controllers\SalesController::class, 'show'])->name('sale.invoice');
+    Route::get('/api/customer/{id}/contact', [\App\Http\Controllers\SalesController::class, 'getCustomerContact']);
+    
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
 });
