@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\TransactionHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -123,7 +124,7 @@ class StockController extends Controller
             $imagePath = $this->uploadImageToS3($request->file('image'));
         }
 
-        Product::create([
+        $product = Product::create([
             'name' => $request->name,
             'categoryID' => $request->categoryID,
             'unitPrice' => $request->unitPrice,
@@ -131,6 +132,15 @@ class StockController extends Controller
             'qty' => $request->qty,
             'minStock' => $request->minStock ?? 0,
             'image' => $imagePath,
+        ]);
+
+        // Record expense transaction in cashflow
+        $totalExpense = $request->unitPrice * $request->qty;
+        TransactionHistory::create([
+            'amount' => $totalExpense,
+            'type' => 'expense',
+            'description' => 'Stock purchase: ' . $request->name . ' (Qty: ' . $request->qty . ')',
+            'date' => now(),
         ]);
 
         return redirect()->back()->with('success', 'Product added successfully!');
@@ -321,6 +331,15 @@ class StockController extends Controller
         // Update product quantity
         $product->qty = $product->qty + $request->quantity;
         $product->save();
+
+        // Record expense transaction in cashflow
+        $totalExpense = $product->unitPrice * $request->quantity;
+        TransactionHistory::create([
+            'amount' => $totalExpense,
+            'type' => 'expense',
+            'description' => 'Stock addition: ' . $product->name . ' (Qty: ' . $request->quantity . ')',
+            'date' => now(),
+        ]);
 
         return redirect()->back()->with('success', 'Stock added successfully!');
     }

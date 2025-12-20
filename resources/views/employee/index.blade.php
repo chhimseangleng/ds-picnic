@@ -1,11 +1,16 @@
 <x-app-layout>
-    <div class="p-8 bg-gray-50 min-h-screen">
+    <div class="p-4 md:p-8 bg-gray-50 min-h-screen">
         <!-- Header Section -->
-        <div class="flex justify-between items-center mb-8 bg-white px-8 py-6 rounded-lg shadow">
-            <h1 class="text-2xl font-semibold text-gray-800">Employee</h1>
-            <button onclick="openEmployeeModal()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-indigo-700 transition-all hover:-translate-y-0.5 hover:shadow-lg">
-                + Add Employee
-            </button>
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8 bg-white px-4 md:px-8 py-6 rounded-lg shadow">
+            <h1 class="text-xl md:text-2xl font-semibold text-gray-800">Employee</h1>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="{{ route('employees.salary.management') }}" class="w-full sm:w-auto text-center bg-green-600 text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-green-700 transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                    💰 Salary Management
+                </a>
+                <button onclick="openEmployeeModal()" class="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-indigo-700 transition-all hover:-translate-y-0.5 hover:shadow-lg">
+                    + Add Employee
+                </button>
+            </div>
         </div>
 
         <!-- Success Message -->
@@ -16,11 +21,11 @@
         @endif
 
         <!-- Filter and Search Section -->
-        <div class="bg-white px-8 py-6 rounded-lg mb-8 shadow">
-            <form method="GET" action="{{ route('employees') }}" class="flex gap-8 items-end">
-                <div class="flex flex-col gap-2">
+        <div class="bg-white px-4 md:px-8 py-6 rounded-lg mb-8 shadow">
+            <form method="GET" action="{{ route('employees') }}" class="flex flex-col md:flex-row gap-4 md:gap-8 md:items-end">
+                <div class="flex flex-col gap-2 flex-1">
                     <label class="text-sm font-medium text-gray-600">Date</label>
-                    <select name="date_filter" onchange="this.form.submit()" class="px-4 py-2.5 border border-gray-300 rounded-md text-sm min-w-[200px] focus:outline-none focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100">
+                    <select name="date_filter" onchange="this.form.submit()" class="px-4 py-2.5 border border-gray-300 rounded-md text-sm w-full focus:outline-none focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100">
                         <option value="">All Time</option>
                         <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
                         <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>This Week</option>
@@ -28,9 +33,9 @@
                     </select>
                 </div>
 
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 flex-1">
                     <label class="text-sm font-medium text-gray-600">Search</label>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search Employee" class="px-4 py-2.5 border border-gray-300 rounded-md text-sm min-w-[200px] focus:outline-none focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search Employee" class="px-4 py-2.5 border border-gray-300 rounded-md text-sm w-full focus:outline-none focus:border-indigo-600 focus:ring-3 focus:ring-indigo-100">
                 </div>
             </form>
         </div>

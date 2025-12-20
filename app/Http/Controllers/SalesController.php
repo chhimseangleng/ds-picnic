@@ -132,6 +132,7 @@ class SalesController extends Controller
             'amount' => (float) $request->total,
             'type' => 'income',
             'description' => 'Sale Order #' . $orderID,
+            'sale_id' => $sale->_id,
             'date' => now(),
         ]);
 

@@ -44,11 +44,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/stock/bundles/{id}', [\App\Http\Controllers\BundleController::class, 'destroy'])->name('bundles.destroy');
     /////
     Route::get('/cashflow', [CashflowController::class, 'index'])->name('cashflow');
+    Route::post('/cashflow/add-expense', [CashflowController::class, 'addExpense'])->name('cashflow.add-expense');
+    Route::post('/cashflow/add-bonus', [CashflowController::class, 'addBonus'])->name('cashflow.add-bonus');
     Route::get('/employees', [EmployeesController::class, 'index'])->name('employees');
     Route::get('/employees/{id}', [EmployeesController::class, 'show'])->name('employees.show');
     Route::post('/employees', [EmployeesController::class, 'store'])->name('employees.store');
     Route::put('/employees/{id}', [EmployeesController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{id}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
+    Route::get('/employees/salary/management', [EmployeesController::class, 'salaryManagement'])->name('employees.salary.management');
+    Route::post('/employees/salary/pay', [EmployeesController::class, 'paySalary'])->name('employees.salary.pay');
     
     // Customer routes
     Route::get('/customers', [CustomersController::class, 'index'])->name('customers');

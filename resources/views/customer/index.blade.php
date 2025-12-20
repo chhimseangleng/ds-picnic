@@ -5,13 +5,13 @@
         </h2>
     </x-slot>
 
-    <div class="py-6">
-        <div class="bg-white shadow rounded-lg p-6">
+    <div class="py-4 md:py-6">
+        <div class="bg-white shadow rounded-lg p-4 md:p-6">
             <!-- Header with Add Customer Button -->
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-semibold text-gray-800">Customer List</h3>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                <h3 class="text-xl md:text-2xl font-semibold text-gray-800">Customer List</h3>
                 <button onclick="openAddCustomerModal()" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold flex items-center shadow">
+                    class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold flex items-center justify-center shadow">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
@@ -27,15 +27,15 @@
 
             <!-- Search Bar -->
             <div class="mb-4">
-                <form method="GET" action="{{ route('customers') }}" class="flex gap-3">
+                <form method="GET" action="{{ route('customers') }}" class="flex flex-col sm:flex-row gap-3">
                     <input type="text" name="search" value="{{ request('search') }}" 
                         placeholder="Search Customer" 
                         class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <button type="submit" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    <button type="submit" class="w-full sm:w-auto px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
                         Search
                     </button>
                     @if(request('search'))
-                        <a href="{{ route('customers') }}" class="px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                        <a href="{{ route('customers') }}" class="w-full sm:w-auto text-center px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
                             Clear
                         </a>
                     @endif
@@ -43,7 +43,7 @@
             </div>
 
             <!-- Customer Table -->
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto -mx-4 md:mx-0">
                 <table class="min-w-full bg-white border border-gray-200">
                     <thead class="bg-gray-100">
                         <tr>

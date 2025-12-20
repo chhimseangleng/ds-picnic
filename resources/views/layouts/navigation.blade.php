@@ -1,4 +1,15 @@
-<nav class="flex flex-col w-64 bg-white border-r border-gray-200 min-h-screen">
+<!-- Mobile Menu Button (shown on mobile only) -->
+<button id="mobile-menu-button" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-lg">
+    <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+</button>
+
+<!-- Overlay (shown when mobile menu is open) -->
+<div id="mobile-menu-overlay" class="hidden lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"></div>
+
+<!-- Sidebar Navigation -->
+<nav id="sidebar" class="fixed lg:static inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col w-64 bg-white border-r border-gray-200 min-h-screen z-40">
 
     <!-- Logo + Store Name -->
     <div class="flex flex-col items-center py-6 border-b border-gray-200">
@@ -7,7 +18,7 @@
     </div>
 
     <!-- Navigation Links -->
-    <div class="flex-1 mt-6 px-4 flex flex-col space-y-1">
+    <div class="flex-1 mt-6 px-4 flex flex-col space-y-1 overflow-y-auto">
 
         <!-- Dashboard -->
         <a href="{{ route('dashboard') }}"
@@ -110,3 +121,32 @@
 
     </div>
 </nav>
+
+<!-- Mobile Menu Script -->
+<script>
+    const menuButton = document.getElementById('mobile-menu-button');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('mobile-menu-overlay');
+
+    // Toggle mobile menu
+    menuButton.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    });
+
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    });
+
+    // Close menu when clicking a link (optional, for better UX)
+    sidebar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 1024) { // Only on mobile
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        });
+    });
+</script>

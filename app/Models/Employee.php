@@ -37,5 +37,10 @@ class Employee extends Model
     {
         return $this->hasMany(\App\Models\Product_Addstock::class, 'employeeID', 'id');
     }
+
+    public function salaryPayments()
+    {
+        return $this->hasMany(\App\Models\SalaryPayment::class, 'employeeID', '_id');
+    }
     
 }

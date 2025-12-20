@@ -5,16 +5,16 @@
         </h2>
     </x-slot>
 
-    <div class="py-6">
+    <div class="py-4 md:py-6">
 
         <!-- Box Container -->
-        <div class="bg-gray-100 shadow rounded-lg p-6">
+        <div class="bg-gray-100 shadow rounded-lg p-4 md:p-6">
 
             <!-- Top Bar: Title Left, Buttons Right -->
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-semibold text-gray-800">Inventory List</h3>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+                <h3 class="text-lg md:text-xl font-semibold text-gray-800">Inventory List</h3>
 
-                <div class="flex gap-4">
+                <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
                     <!-- Product Category -->
                     <a href="{{ route('stock.categories') }}"
                         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center">

@@ -14,6 +14,7 @@ class TransactionHistory extends Model
         'type',        // 'income' or 'expense'
         'description',
         'date',
+        'sale_id',     // Reference to Sale for income transactions
     ];
 
     protected $casts = [
