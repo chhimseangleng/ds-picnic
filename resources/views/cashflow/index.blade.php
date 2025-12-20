@@ -162,15 +162,24 @@
                                     @if($transaction->type === 'income')
                                         @php
                                             $saleId = null;
-                                            // Try to get sale_id directly
-                                            if ($transaction->sale_id) {
+                                            
+                                            // Try to get sale_id directly (new transactions)
+                                            if (isset($transaction->sale_id) && $transaction->sale_id) {
                                                 $saleId = $transaction->sale_id;
                                             } 
                                             // Fallback: parse orderID from description for old transactions
-                                            elseif (preg_match('/Sale Order #(A-[0-9]+)/', $transaction->description, $matches)) {
-                                                $orderID = $matches[1];
-                                                $sale = \App\Models\Sale::where('orderID', $orderID)->first();
-                                                $saleId = $sale ? $sale->_id : null;
+                                            elseif (isset($transaction->description) && $transaction->description) {
+                                                // Match patterns like "Sale Order #A-001", "Sale Order #A-123", etc.
+                                                if (preg_match('/Sale Order\s*#\s*(A-\d+)/i', $transaction->description, $matches)) {
+                                                    $orderID = $matches[1];
+                                                    try {
+                                                        $sale = \App\Models\Sale::where('orderID', $orderID)->first();
+                                                        $saleId = $sale ? $sale->_id : null;
+                                                    } catch (\Exception $e) {
+                                                        // Silently fail if Sale model not available
+                                                        $saleId = null;
+                                                    }
+                                                }
                                             }
                                         @endphp
                                         
