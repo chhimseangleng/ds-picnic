@@ -32,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/stock/product/{id}', [StockController::class, 'showProduct'])->name('stock.show.product');
     Route::put('/stock/product/{id}', [StockController::class, 'updateProduct'])->name('stock.update.product');
     Route::delete('/stock/product/{id}', [StockController::class, 'deleteProduct'])->name('stock.delete.product');
-    Route::get('/api/products', [StockController::class, 'getProductsApi'])->name('api.products');
+    // Route::get('/api/products', [StockController::class, 'getProductsApi'])->name('api.products'); // Moved to API routes
     Route::post('/stock/add-stock', [StockController::class, 'addStock'])->name('stock.addStock');
     
     // Bundle routes
